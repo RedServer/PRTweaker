@@ -1,0 +1,59 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+	}
+}
+
+repositories {
+}
+
+apply plugin: 'forge'
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+
+version = "1.0"
+group = "ru.redserver"
+archivesBaseName = "PRTweaker"
+
+jar {
+    manifest {
+        attributes("FMLCorePluginContainsFMLMod": "true", "FMLCorePlugin": "ru.redserver.prtweaker.asm.LoadingPlugin")
+    }
+}
+
+minecraft {
+	version = "1.7.10-10.13.4.1614-1.7.10"
+	runDir = "eclipse"
+	replace "@VERSION@", project.version
+}
+
+dependencies {
+}
+
+task devJar(type: Jar) {
+	classifier = 'dev'
+	from sourceSets.main.output
+}
+
+task sourcesJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives devJar
+	archives sourcesJar
+}
