@@ -1,33 +1,40 @@
 package ru.redserver.prtweaker.asm;
 
-import cpw.mods.fml.relauncher.FMLRelaunchLog;
+import java.util.ArrayList;
 import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.MethodNode;
+import ru.redserver.prtweaker.asm.handler.*;
 
 public final class ClassTransformer implements IClassTransformer {
 
-	public static boolean patched = false;
+	public static boolean DUMP_CLASSES = false;
+	private final ArrayList<IClassHandler> handlers = new ArrayList<>();
+
+	public ClassTransformer() {
+		handlers.add(new TransportationSPHHandler());
+	}
 
 	@Override
 	public byte[] transform(String origName, String name, byte[] bytes) {
-		if(name.equals("mrtjp.projectred.transportation.TransportationSPH$")) {
-			ClassNode node = ASMHelper.readClass(bytes);
-			processTransportationSPH(node);
-			bytes = ASMHelper.writeClass(node, 0);
-			FMLRelaunchLog.info(name + "patched!");
+		if(bytes != null && bytes.length > 0) {
+			ClassNode node = null;
+			boolean transformed = false;
+
+			// Обработка
+			for(IClassHandler handler : handlers) {
+				if(handler.accept(name)) {
+					if(node == null) node = ASMHelper.readClass(bytes);
+					transformed |= handler.transform(node);
+				}
+			}
+
+			// Результат
+			if(node != null && transformed) {
+				bytes = ASMHelper.writeClass(node, 0);
+				if(DUMP_CLASSES) ASMHelper.saveDump(name, bytes);
+			}
 		}
 		return bytes;
-	}
-
-	private void processTransportationSPH(ClassNode node) {
-		MethodNode method = ASMHelper.findMethod(node, "setChipNBT", "(Lcodechicken/lib/packet/PacketCustom;Lnet/minecraft/entity/player/EntityPlayerMP;)V");
-		method.instructions.clear();
-		method.instructions.add(new InsnNode(Opcodes.RETURN));
-
-		patched = true;
 	}
 
 }
