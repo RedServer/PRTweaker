@@ -12,6 +12,7 @@ public final class ClassTransformer implements IClassTransformer {
 
 	public ClassTransformer() {
 		handlers.add(new TransportationSPHHandler());
+		handlers.add(new BlockUpdateHandler());
 	}
 
 	@Override
