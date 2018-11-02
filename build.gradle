@@ -27,7 +27,7 @@ apply plugin: 'forge'
 targetCompatibility = '1.8'
 sourceCompatibility = '1.8'
 
-version = "1.1"
+version = "1.2"
 group = "ru.redserver"
 archivesBaseName = "PRTweaker"
 
