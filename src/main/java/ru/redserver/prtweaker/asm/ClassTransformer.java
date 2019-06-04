@@ -14,6 +14,7 @@ public final class ClassTransformer implements IClassTransformer {
 		handlers.add(new TransportationSPHHandler());
 		handlers.add(new BlockUpdateHandler());
 		handlers.add(new FilteredImporterHandler());
+		handlers.add(new TimerGateLogicHandler());
 	}
 
 	@Override
