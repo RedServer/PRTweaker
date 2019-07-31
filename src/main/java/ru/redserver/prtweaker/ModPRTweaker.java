@@ -6,6 +6,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import java.io.File;
 import net.minecraft.item.Item;
+import ru.redserver.prtweaker.asm.handler.InstancedBlockTile;
 import ru.redserver.prtweaker.asm.handler.TransportationSPHHandler;
 import ru.redserver.prtweaker.util.LogHelper;
 
@@ -37,11 +38,14 @@ public final class ModPRTweaker {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		// Проверка успешности установки фиксов
 		if(Loader.isModLoaded("ProjRed|Transportation")) {
 			itemRoutingChip = (Item)Item.itemRegistry.getObject("ProjRed|Transportation:projectred.transportation.routingchip");
 			if(itemRoutingChip == null) throw new RuntimeException("Can't get routing chip item!");
 			if(!TransportationSPHHandler.patchApplied) throw new RuntimeException("ProjRed|Transportation patch not installied!");
 		}
+
+		if(!InstancedBlockTile.patchApplied) throw new RuntimeException("InstancedBlockTile not patched!");
 	}
 
 }
