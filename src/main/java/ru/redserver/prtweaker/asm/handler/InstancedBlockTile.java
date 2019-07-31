@@ -12,6 +12,7 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import ru.redserver.prtweaker.asm.ASMHelper;
+import ru.redserver.prtweaker.util.LogHelper;
 
 /**
  * Фикс уязвимости InstancedBlockTile (обработка сервером клиентских пакетов)
@@ -39,6 +40,7 @@ public final class InstancedBlockTile implements IClassHandler {
 		insn.add(label);
 		method.instructions.insert(insn);
 
+		LogHelper.info("Added packet side check for InstancedBlockTile.");
 		patchApplied = true;
 		return true;
 	}

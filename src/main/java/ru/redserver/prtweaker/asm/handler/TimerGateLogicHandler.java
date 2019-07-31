@@ -51,7 +51,7 @@ public final class TimerGateLogicHandler implements IClassHandler {
 		}
 
 		// Внедряем условие, которое будет возвращать saveTime(), когда world == null
-		int localIndex = ++getTotalTime.maxLocals;
+		int localIndex = getTotalTime.maxLocals + 1;
 		InsnList list = new InsnList();
 		LabelNode label = new LabelNode();
 		list.add(new VarInsnNode(Opcodes.ASTORE, localIndex)); // Сохраняем результат в переменную
@@ -64,6 +64,7 @@ public final class TimerGateLogicHandler implements IClassHandler {
 		list.add(new FrameNode(Opcodes.F_SAME, 0, null, 0, null)); // Фикс `Expecting a stackmap frame`
 		list.add(new VarInsnNode(Opcodes.ALOAD, localIndex)); // Помещаем ранее сохранённую переменную обратно в стек
 		getTotalTime.instructions.insert(getWorldcall, list);
+		getTotalTime.maxLocals += 2;
 
 		LogHelper.info("TTimerGateLogic patched.");
 		return true;
