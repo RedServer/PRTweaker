@@ -17,6 +17,7 @@ public final class ClassTransformer implements IClassTransformer {
 		handlers.add(new TimerGateLogicHandler());
 		handlers.add(new ItemJetpackHandler());
 		handlers.add(new InstancedBlockHandler());
+		handlers.add(new ContainerHandler());
 	}
 
 	@Override
