@@ -1,12 +1,10 @@
 package ru.redserver.prtweaker;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import java.io.File;
 import net.minecraft.item.Item;
-import org.apache.logging.log4j.Level;
 import ru.redserver.prtweaker.asm.handler.InstancedBlockHandler;
 import ru.redserver.prtweaker.asm.handler.TransportationSPHHandler;
 import ru.redserver.prtweaker.util.LogHelper;
@@ -38,20 +36,9 @@ public final class ModPRTweaker {
 	}
 
 	@Mod.EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		// Проверка успешности установки фиксов
-		if(Loader.isModLoaded("ProjRed|Transportation")) {
-			itemRoutingChip = (Item)Item.itemRegistry.getObject("ProjRed|Transportation:projectred.transportation.routingchip");
-			if(itemRoutingChip == null) throw new RuntimeException("Can't get routing chip item!");
-			if(!TransportationSPHHandler.patchApplied) throw new RuntimeException("ProjRed|Transportation patch not installied!");
-		}
-
-		try {
-			Class.forName("mrtjp.core.block.InstancedBlockTile"); // Загружаем класс, если не был загружен ранее
-			if(!InstancedBlockHandler.patchApplied) throw new RuntimeException("InstancedBlockTile not patched!");
-		} catch (ClassNotFoundException ex) {
-			LogHelper.log(Level.FATAL, "Class not found!", ex);
-		}
+	public void serverStart(FMLServerStartedEvent event) {
+		TransportationSPHHandler.check();
+		InstancedBlockHandler.check();
 	}
 
 }

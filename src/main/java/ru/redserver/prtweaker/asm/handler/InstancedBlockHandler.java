@@ -1,9 +1,7 @@
 package ru.redserver.prtweaker.asm.handler;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
+import org.apache.logging.log4j.Level;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
@@ -20,7 +18,7 @@ import ru.redserver.prtweaker.util.LogHelper;
  */
 public final class InstancedBlockHandler implements IClassHandler {
 
-	public static boolean patchApplied = false;
+	private static boolean patchApplied = false;
 
 	@Override
 	public boolean accept(String name) {
@@ -34,7 +32,7 @@ public final class InstancedBlockHandler implements IClassHandler {
 		// Запрещаем серверу обрабатывать DescriptionPacket - они предназначены для обновления блоков в КЛИЕНТСКОМ мире
 		LabelNode label = new LabelNode();
 		InsnList insn = new InsnList();
-		insn.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(InstancedBlockHandler.class), "isClientSide", "()Z", false));
+		insn.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "ru/redserver/prtweaker/util/Helpers", "isClientSide", "()Z", false));
 		insn.add(new JumpInsnNode(Opcodes.IFNE, label));
 		insn.add(new InsnNode(Opcodes.RETURN));
 		insn.add(label);
@@ -45,8 +43,16 @@ public final class InstancedBlockHandler implements IClassHandler {
 		return true;
 	}
 
-	public static boolean isClientSide() {
-		return FMLCommonHandler.instance().getSide() == Side.CLIENT;
+	/**
+	 * Используется для проверки успешной установки фикса
+	 */
+	public static void check() {
+		try {
+			Class.forName("mrtjp.core.block.InstancedBlockTile"); // Загружаем класс, если не был загружен ранее
+			if(!patchApplied) throw new RuntimeException("InstancedBlockTile not patched!");
+		} catch (ClassNotFoundException ex) {
+			LogHelper.log(Level.FATAL, "Class not found!", ex);
+		}
 	}
 
 }

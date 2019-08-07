@@ -55,6 +55,7 @@ public final class ContainerHandler implements IClassHandler {
 		mv.visitVarInsn(Opcodes.ALOAD, 1);
 		mv.visitMethodInsn(Opcodes.INVOKESTATIC, "ru/redserver/prtweaker/util/Helpers", "isUseableByPlayer", "(Lnet/minecraft/tileentity/TileEntity;Lnet/minecraft/entity/player/EntityPlayer;)Z", false);
 		mv.visitInsn(Opcodes.IRETURN);
+		mv.visitMaxs(2, 2);
 		mv.visitEnd();
 	}
 
