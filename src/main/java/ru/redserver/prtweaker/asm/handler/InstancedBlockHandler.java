@@ -18,7 +18,7 @@ import ru.redserver.prtweaker.util.LogHelper;
  * Фикс уязвимости InstancedBlockTile (обработка сервером клиентских пакетов)
  * @author TheAndrey
  */
-public final class InstancedBlockTile implements IClassHandler {
+public final class InstancedBlockHandler implements IClassHandler {
 
 	public static boolean patchApplied = false;
 
@@ -34,7 +34,7 @@ public final class InstancedBlockTile implements IClassHandler {
 		// Запрещаем серверу обрабатывать DescriptionPacket - они предназначены для обновления блоков в КЛИЕНТСКОМ мире
 		LabelNode label = new LabelNode();
 		InsnList insn = new InsnList();
-		insn.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(InstancedBlockTile.class), "isClientSide", "()Z", false));
+		insn.add(new MethodInsnNode(Opcodes.INVOKESTATIC, Type.getInternalName(InstancedBlockHandler.class), "isClientSide", "()Z", false));
 		insn.add(new JumpInsnNode(Opcodes.IFNE, label));
 		insn.add(new InsnNode(Opcodes.RETURN));
 		insn.add(label);

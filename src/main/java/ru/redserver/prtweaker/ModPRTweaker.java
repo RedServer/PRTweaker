@@ -7,7 +7,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import java.io.File;
 import net.minecraft.item.Item;
 import org.apache.logging.log4j.Level;
-import ru.redserver.prtweaker.asm.handler.InstancedBlockTile;
+import ru.redserver.prtweaker.asm.handler.InstancedBlockHandler;
 import ru.redserver.prtweaker.asm.handler.TransportationSPHHandler;
 import ru.redserver.prtweaker.util.LogHelper;
 
@@ -48,7 +48,7 @@ public final class ModPRTweaker {
 
 		try {
 			Class.forName("mrtjp.core.block.InstancedBlockTile"); // Загружаем класс, если не был загружен ранее
-			if(!InstancedBlockTile.patchApplied) throw new RuntimeException("InstancedBlockTile not patched!");
+			if(!InstancedBlockHandler.patchApplied) throw new RuntimeException("InstancedBlockTile not patched!");
 		} catch (ClassNotFoundException ex) {
 			LogHelper.log(Level.FATAL, "Class not found!", ex);
 		}
